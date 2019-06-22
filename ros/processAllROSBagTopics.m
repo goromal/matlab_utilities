@@ -1,6 +1,6 @@
-function [ data ] = processAllTopics( bagfile )
+function [ data ] = processAllROSBagTopics( bagfile )
 % take a ROSbag file and return a struct of processed topics
-% (modify processTopics.m to add custom message types)
+% (modify processROSBagTopics.m to add custom message types)
 
 assert(exist(bagfile,'file') ~= 0,'Bag file does not exist');
 
@@ -11,6 +11,6 @@ clear ros.Bag;
 % addpath('navfn')
 
 bag = ros.Bag.load(bagfile);
-data = processTopics(bag.topics,bagfile);
+data = processROSBagTopics(bag.topics,bagfile);
 end
 

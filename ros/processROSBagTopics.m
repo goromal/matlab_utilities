@@ -1,4 +1,4 @@
-function data = processTopics(topics,bagfile,t0)
+function data = processROSBagTopics(topics,bagfile,t0)
 %clear rosbag_wrapper;
 %clear ros.Bag;
 

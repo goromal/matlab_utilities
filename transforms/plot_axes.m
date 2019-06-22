@@ -1,0 +1,16 @@
+function [] = plot_axes(axesdef, linetype)
+% Takes axes matrix object [o x y z] (3x4) axesdef and plots an rgb set
+% of axes with line style linetype (default: '-')
+
+if nargin == 1
+    linetype = '-';
+end
+
+plot3([axesdef(1,1) axesdef(1,2)], [axesdef(2,1) axesdef(2,2)], ...
+      [axesdef(3,1) axesdef(3,2)], strcat('r', linetype), ...
+      [axesdef(1,1) axesdef(1,3)], [axesdef(2,1) axesdef(2,3)], ...
+      [axesdef(3,1) axesdef(3,3)], strcat('g', linetype), ...
+      [axesdef(1,1) axesdef(1,4)], [axesdef(2,1) axesdef(2,4)], ...
+      [axesdef(3,1) axesdef(3,4)], strcat('b', linetype), 'Linewidth', 3)
+
+end
