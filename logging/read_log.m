@@ -4,5 +4,6 @@ function data = read_log(logname, rowSize)
 data_log = fopen(logname,'r');
 data = fread(data_log, 'double');
 data = reshape(data, rowSize, []);
+fclose(data_log);
 
 end
