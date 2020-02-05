@@ -67,11 +67,18 @@ for topic = topics
             struct.msg = {a.data};
         case 'rosflight_msgs/Attitude'
             struct.q = [a.attitude];
-            [r,p,y] = rollPitchYawFromQuaternion(struct.q');
-            struct.q_euler = [r,p,y]*180/pi;
+%             disp(struct.q)
+%             [r,p,y] = rollPitchYawFromQuaternion(struct.q');
+            [r,p,y] = quat_to_euler(struct.q(4,:),struct.q(1,:),struct.q(2,:), ...
+                                    struct.q(3,:));
+            struct.q_euler = [r;p;y]*180/pi;
             struct.omega = [a.angular_velocity];
         case 'geometry_msgs/Vector3Stamped'
-            struct.vec = [a.vector];            
+            struct.vec = [a.vector];
+        case 'geometry_msgs/WrenchStamped'
+            w = [a.wrench];
+            struct.force = [w.force];
+            struct.torque = [w.torque];
         case 'rosflight_msgs/Barometer'
             struct.altitude = [a.altitude];
             struct.pressure = [a.pressure];
@@ -100,7 +107,11 @@ for topic = topics
             b = [a.transform];
             struct.transform.translation = [b.translation];
             struct.transform.rotation = [b.rotation];
-            [r,p,y] = rollPitchYawFromQuaternion(struct.transform.rotation.');
+%             [r,p,y] = rollPitchYawFromQuaternion(struct.transform.rotation.');
+            [r,p,y] = quat_to_euler(struct.transform.rotation(4,:),...
+                                    struct.transform.rotation(1,:),...
+                                    struct.transform.rotation(2,:),...
+                                    struct.transform.rotation(3,:));
             struct.transform.euler = [r,p,y]*180/pi;
             struct.velocity = [a.velocity];     
             struct.node_id = [a.node_id];
@@ -112,13 +123,21 @@ for topic = topics
         case 'geometry_msgs/Transform'
             struct.transform.translation = [a.translation];
             struct.transform.rotation = [a.rotation];
-            [r,p,y] = rollPitchYawFromQuaternion(struct.transform.rotation.');
+%             [r,p,y] = rollPitchYawFromQuaternion(struct.transform.rotation.');
+            [r,p,y] = quat_to_euler(struct.transform.rotation(4,:),...
+                                    struct.transform.rotation(1,:),...
+                                    struct.transform.rotation(2,:),...
+                                    struct.transform.rotation(3,:));
             struct.transform.euler = [r,p,y]*180/pi;
         case 'geometry_msgs/TransformStamped'
             b = [a.transform];
             struct.transform.translation = [b.translation];
             struct.transform.rotation = [b.rotation];
-            [r,p,y] = rollPitchYawFromQuaternion(struct.transform.rotation.');
+%             [r,p,y] = rollPitchYawFromQuaternion(struct.transform.rotation.');
+            [r,p,y] = quat_to_euler(struct.transform.rotation(4,:),...
+                                    struct.transform.rotation(1,:),...
+                                    struct.transform.rotation(2,:),...
+                                    struct.transform.rotation(3,:));
             struct.transform.euler = [r,p,y]*180/pi;
         case 'relative_nav/DesiredState'
             struct.pose = [a.pose];
@@ -147,25 +166,31 @@ for topic = topics
             struct.valid_transformation = [a.valid_transformation];
             struct.transform.translation = [b.translation];
             struct.transform.rotation = [b.rotation];
-            [r,p,y] = rollPitchYawFromQuaternion(struct.transform.rotation.');
+%             [r,p,y] = rollPitchYawFromQuaternion(struct.transform.rotation.');
+            [r,p,y] = quat_to_euler(struct.transform.rotation(4,:),...
+                                    struct.transform.rotation(1,:),...
+                                    struct.transform.rotation(2,:),...
+                                    struct.transform.rotation(3,:));
             struct.transform.euler = [r,p,y]*180/pi;
         case 'relative_nav/Command'
             struct.commands = [a];
         case 'evart_bridge/transform_plus'
-            b = [a.transform];
-            struct.transform.translation = [b.translation];
-            struct.transform.rotation = [b.rotation];
-            struct.transform.euler = rollPitchYawFromQuaternion(struct.transform.rotation.')*180/pi;
-            struct.euler = [a.euler];
-            struct.velocity = [a.velocity];
+            disp('evart_bridge/transform_plus not supported')
+%             b = [a.transform];
+%             struct.transform.translation = [b.translation];
+%             struct.transform.rotation = [b.rotation];
+%             struct.transform.euler = rollPitchYawFromQuaternion(struct.transform.rotation.')*180/pi;
+%             struct.euler = [a.euler];
+%             struct.velocity = [a.velocity];
         case 'relative_nav/Edge'
-            b = [a.transform];
-            struct.transform.translation = [b.translation];
-            struct.transform.rotation = [b.rotation];
-            struct.transform.euler = rollPitchYawFromQuaternion(struct.transform.rotation.')*180/pi;
-            struct.from_node_id = [a.from_node_id];
-            struct.to_node_id = [a.to_node_id];
-            struct.covariance = [a.covariance];   
+            disp('relative_nav/Edge not supported')
+%             b = [a.transform];
+%             struct.transform.translation = [b.translation];
+%             struct.transform.rotation = [b.rotation];
+%             struct.transform.euler = rollPitchYawFromQuaternion(struct.transform.rotation.')*180/pi;
+%             struct.from_node_id = [a.from_node_id];
+%             struct.to_node_id = [a.to_node_id];
+%             struct.covariance = [a.covariance];   
         case 'nav_msgs/Odometry'
             b = [a.pose];
             c = [b.pose];
