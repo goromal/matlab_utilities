@@ -45,6 +45,8 @@ for topic = topics
     switch type{:}
         case 'std_msgs/Float32'
             struct.a = a;
+        case 'std_msgs/Float64MultiArray'
+            struct.data = [a.data];
         case 'sensor_msgs/Temperature'
             struct.temp = [a.temperature];
             struct.cov = [a.variance];
@@ -68,15 +70,43 @@ for topic = topics
             struct.q = [a.attitude];
             [r,p,y] = quat_to_euler(struct.q(4,:),struct.q(1,:),struct.q(2,:), ...
                                     struct.q(3,:));
-            struct.q_euler = [r;p;y]*180/pi;
+            struct.q_euler = [r;p;y];
             struct.omega = [a.angular_velocity];
         case 'geometry_msgs/Vector3Stamped'
             struct.vec = [a.vector];
+        case 'geometry_msgs/Wrench'
+            struct.force = [a.force];
+            struct.torque = [a.torque];
         case 'ublox_msgs/NavRELPOSNED'
             % TODO: support time later
             struct.N = double([a.relPosN])/1e2 + double([a.relPosHPN])/1e4;
             struct.E = double([a.relPosE])/1e2 + double([a.relPosHPE])/1e4;
             struct.D = double([a.relPosD])/1e2 + double([a.relPosHPD])/1e4;
+%             struct.Ncov = (double([a.accN])/1e4).^2;
+%             struct.Ecov = (double([a.accE])/1e4).^2;
+%             struct.Dcov = (double([a.accD])/1e4).^2;
+            struct.Nstdev = double([a.accN])/1e4;
+            struct.Estdev = double([a.accE])/1e4;
+            struct.Dstdev = double([a.accD])/1e4;
+        case 'ublox_msgs/NavVELNED'
+            struct.velN = double([a.velN])/1e2;
+            struct.velE = double([a.velE])/1e2;
+            struct.velD = double([a.velD])/1e2;
+%             struct.velcov = (double([a.sAcc])/1e2).^2;
+            struct.velstdev = double([a.sAcc])/1e2;
+        case 'ublox_msgs/NavPVT'
+            struct.lat = double([a.lat])/1e7;
+            struct.lon = double([a.lon])/1e7;
+            struct.alt = double([a.height])/1e3;
+            struct.velN = double([a.velN])/1e3;
+            struct.velE = double([a.velE])/1e3;
+            struct.velD = double([a.velD])/1e3;
+            struct.horstdev = double([a.hAcc])/1e3;
+            struct.verstdev = double([a.vAcc])/1e3;
+            struct.spdstdev = double([a.sAcc])/1e3;
+        case 'rosflight_sil/ROSflightSimState'
+            struct.imu.accel = [a.imu_accel];
+            struct.imu.gyro  = [a.imu_gyro];
         case 'geometry_msgs/WrenchStamped'
             w = [a.wrench];
             struct.force = [w.force];
@@ -194,10 +224,12 @@ for topic = topics
             c = [b.pose];
             struct.pose.position = [c.position];
             struct.pose.orientation = [c.orientation];  
+            struct.pose.covariance = [b.covariance];
             b = [a.twist];
             c = [b.twist];
             struct.twist.linear = [c.linear];
             struct.twist.angular = [c.angular];
+            struct.twist.covariance = [b.covariance];
         case 'geometry_msgs/Point'
             struct.point = a;
         case 'ublox_msgs/NavPOSLLH'
