@@ -181,6 +181,11 @@ for topic = topics
             b = [a.pose];
             struct.pose.position = [b.position];
             struct.pose.orientation = [b.orientation];
+            [r,p,y] = quat_to_euler(struct.pose.orientation(4,:),...
+                                    struct.pose.orientation(1,:),...
+                                    struct.pose.orientation(2,:),...
+                                    struct.pose.orientation(3,:));
+            struct.pose.euler = [r;p;y];
         case 'geometry_msgs/PoseWithCovarianceStamped'
             b = [a.pose];
             c = [b.pose];
@@ -224,6 +229,11 @@ for topic = topics
             c = [b.pose];
             struct.pose.position = [c.position];
             struct.pose.orientation = [c.orientation];  
+            [r,p,y] = quat_to_euler(struct.pose.orientation(4,:),...
+                                    struct.pose.orientation(1,:),...
+                                    struct.pose.orientation(2,:),...
+                                    struct.pose.orientation(3,:));
+            struct.pose.euler = [r;p;y];
             struct.pose.covariance = [b.covariance];
             b = [a.twist];
             c = [b.twist];
@@ -321,6 +331,13 @@ for topic = topics
             % for the older way of representing solution error
             defunct_indices = struct.transform.translation(1,:) < -900.0;
             struct.transform.translation(:,defunct_indices) = struct.transform.translation(:,defunct_indices) + [999.0;999.0;999.0];
+        case 'geometry_msgs/QuaternionStamped'
+            struct.quaternion = [a.quaternion];
+            [r,p,y] = quat_to_euler(struct.quaternion(4,:),...
+                                    struct.quaternion(1,:),...
+                                    struct.quaternion(2,:),...
+                                    struct.quaternion(3,:));
+            struct.euler = [r;p;y];
         case 'visualization_msgs/Marker'
             number = 1;
             for i = a(end:-1:1)
