@@ -77,6 +77,18 @@ for topic = topics
         case 'geometry_msgs/Wrench'
             struct.force = [a.force];
             struct.torque = [a.torque];
+        case 'trajectory_msgs/MultiDOFJointTrajectoryPoint'
+            b = [a.transforms];
+            struct.translations = [b.translation];
+            struct.rotations = [b.rotation];
+            c = [a.velocities];
+            struct.linear_velocities = [c.linear];
+            struct.angular_velocities = [c.angular];
+            d = [a.accelerations];
+            struct.linear_accelerations = [d.linear];
+            struct.angular_accelerations = [d.angular];
+            tfs = [a.time_from_start];
+            struct.time_from_start = [tfs.time];
         case 'ublox_msgs/NavRELPOSNED'
             % TODO: support time later
             struct.N = double([a.relPosN])/1e2 + double([a.relPosHPN])/1e4;
