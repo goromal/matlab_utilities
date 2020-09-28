@@ -319,6 +319,10 @@ for topic = topics
         case 'geometry_msgs/Twist'
             struct.linear = [a.linear];
             struct.angular = [a.angular];
+        case 'geometry_msgs/TwistStamped'
+            b = [a.twist];
+            struct.linear = [b.linear];
+            struct.angular = [b.angular];
         case 'data_processor/MarkerBearingArray'
             struct.bearings = [a.bearings];
         case 'calibration_sim/InertialPoints'
