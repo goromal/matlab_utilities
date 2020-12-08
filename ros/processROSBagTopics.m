@@ -89,6 +89,25 @@ for topic = topics
             struct.angular_accelerations = [d.angular];
             tfs = [a.time_from_start];
             struct.time_from_start = [tfs.time];
+        case 'snapstack_msgs/Goal'
+            struct.pos = [a.p];
+            struct.vel = [a.v];
+            struct.acc = [a.a];
+            struct.jerk = [a.j];
+            struct.yaw = [a.yaw];
+            struct.yaw = continuous_yaw(struct.yaw);
+            struct.dyaw = [a.dyaw];
+        case 'snapstack_msgs/State'
+            struct.pos = [a.pos];
+            struct.vel = [a.vel];
+            struct.quat = [a.quat];
+            [r,p,y] = quat_to_euler(struct.quat(4,:),...
+                                    struct.quat(1,:),...
+                                    struct.quat(2,:),...
+                                    struct.quat(3,:));
+            struct.euler = [r;p;y];
+            struct.euler(3,:) = continuous_yaw(struct.euler(3,:));
+            struct.w = [a.w];
         case 'ublox_msgs/NavRELPOSNED'
             % TODO: support time later
             struct.N = double([a.relPosN])/1e2 + double([a.relPosHPN])/1e4;
